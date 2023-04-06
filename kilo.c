@@ -1,16 +1,25 @@
+#include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
 
+struct termios orig_termios;
+
+void disableRawMode(){
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
+}
+
 void enableRawMode(){
-	struct termios raw;
 	
 	// Get the Terminal Data in to raw
 	// Linux terminal input, output and errro mode
 	// STDIN_FILENO -> 0
 	// STDOUT_FILENO -> 1
 	// STDERR_FILENO -> 2
-	tcgetattr(STDIN_FILENO, &raw);
+	tcgetattr(STDIN_FILENO, &orig_termios);
+	// Disable is automatically called when program exits either from main() or exit() to reset the terminal in original state
+	atexit(disableRawMode);
 
+	struct termios raw = orig_termios;
 	// Turn off Echo
 	raw.c_lflag &= ~(ECHO);
 	
