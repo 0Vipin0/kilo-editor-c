@@ -20,8 +20,8 @@ void enableRawMode(){
 	atexit(disableRawMode);
 
 	struct termios raw = orig_termios;
-	// Turn off Echo
-	raw.c_lflag &= ~(ECHO);
+	// Turn off Echo and Canonical
+	raw.c_lflag &= ~(ECHO | ICANON);
 	
 	// Set the Terminal Data
 	// TCSAFLUSH argument specifies when to apply the change, it waits for all pending output to be written to the terminal, discard any input that hasn't been read
