@@ -22,8 +22,8 @@ void enableRawMode(){
 	atexit(disableRawMode);
 
 	struct termios raw = orig_termios;
-	// Turn off Ctrl+S and Ctrl+Q Signals (IXON)
-	raw.c_iflag &= ~(IXON);
+	// Turn off Ctrl+S and Ctrl+Q Signals (IXON), Ctrl+M (ICRNL)
+	raw.c_iflag &= ~(IXON | ICRNL);
 	// Turn off Echo, Canonical, Ctrl+C/Ctrl+Z Signals (ISIG), Ctrl+V Signals(IEXTEN)
 	raw.c_lflag &= ~(ECHO | ICANON | ISIG | IEXTEN);
 	
