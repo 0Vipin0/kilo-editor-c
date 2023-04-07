@@ -24,11 +24,13 @@ void enableRawMode(){
 	struct termios raw = orig_termios;
 	// Turn off all output processing (OPOST)
 	raw.c_oflag &= ~(OPOST);
-	// Turn off Ctrl+S and Ctrl+Q Signals (IXON), Ctrl+M (ICRNL)
-	raw.c_iflag &= ~(IXON | ICRNL);
+	// Turn off Ctrl+S and Ctrl+Q Signals (IXON), Ctrl+M (ICRNL), Misc. flags(BRKINT - cause a SIGINT signal to program, INPCK - Enable Parity Checking, so not relevant to modern terminals, ISTRIP - 8th bit of each input set to 0)
+	raw.c_iflag &= ~(IXON | ICRNL | BRKINT | INPCK | ISTRIP);
 	// Turn off Echo, Canonical, Ctrl+C/Ctrl+Z Signals (ISIG), Ctrl+V Signals(IEXTEN)
 	raw.c_lflag &= ~(ECHO | ICANON | ISIG | IEXTEN);
-	
+	// Bit Mask - Set character size to 8 bits 
+	raw.c_cflag |= (CS8);
+
 	// Set the Terminal Data
 	// TCSAFLUSH argument specifies when to apply the change, it waits for all pending output to be written to the terminal, discard any input that hasn't been read
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
