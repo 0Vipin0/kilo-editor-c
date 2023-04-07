@@ -1,3 +1,5 @@
+/*** includes ***/
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,12 +7,16 @@
 #include <unistd.h>
 #include <errno.h>
 
+/*** data ***/
+
 struct termios orig_termios;
 
 void die(const char *s){
 	perror(s);
 	exit(1);
 }
+
+/*** terminal ***/
 
 void disableRawMode(){
 	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1)
@@ -48,6 +54,8 @@ void enableRawMode(){
 	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
 		die("tcsetattr");
 }
+
+/*** init ***/
 
 int main() {
 	// Turn the terminal to Raw mode from Canonical Mode
