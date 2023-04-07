@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
+#include <errno.h>
 
 struct termios orig_termios;
 
@@ -12,7 +13,8 @@ void die(const char *s){
 }
 
 void disableRawMode(){
-	tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1)
+		die("tcsetattr");
 }
 
 void enableRawMode(){
@@ -22,7 +24,8 @@ void enableRawMode(){
 	// STDIN_FILENO -> 0
 	// STDOUT_FILENO -> 1
 	// STDERR_FILENO -> 2
-	tcgetattr(STDIN_FILENO, &orig_termios);
+	if (tcgetattr(STDIN_FILENO, &orig_termios) == -1)
+		die("tcgetattr");
 	// Disable is automatically called when program exits either from main() or exit() to reset the terminal in original state
 	atexit(disableRawMode);
 
@@ -42,7 +45,8 @@ void enableRawMode(){
 
 	// Set the Terminal Data
 	// TCSAFLUSH argument specifies when to apply the change, it waits for all pending output to be written to the terminal, discard any input that hasn't been read
-	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
+		die("tcsetattr");
 }
 
 int main() {
@@ -52,7 +56,8 @@ int main() {
 	while (1){
 		// Variable to get the input
 		char c = '\0';
-		read(STDIN_FILENO, &c, 1);
+		if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN)
+			die("read");
 		if(iscntrl(c)){
 			printf("%d\r\n", c);
 		} else {
