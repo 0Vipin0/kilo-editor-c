@@ -8,6 +8,7 @@
 #include <errno.h>
 
 /*** defines ***/
+// Sets the upper 3 bits of character to 0 like Ctrl key does
 #define CTRL_KEY(k) ((k) & 0x1f) 
 
 /*** data ***/
