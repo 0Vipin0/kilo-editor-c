@@ -59,6 +59,30 @@ void enableRawMode(){
 		die("tcsetattr");
 }
 
+char editorReadKey(){
+	// Used for error checking
+	int nread;
+	// Character to be read in to c
+	char c;
+	while( (nread = read(STDIN_FILENO, &c, 1)) != 1){
+		if(nread == -1 && errno != EAGAIN) die("read");
+	}
+	return c;
+}
+
+/*** input ***/
+
+void editorProcessKeypress(){
+	char c = editorReadKey();
+
+	switch(c){
+		case CTRL_KEY('q'):
+			exit(0);
+			break;
+	}
+}
+
+
 /*** init ***/
 
 int main() {
@@ -66,16 +90,7 @@ int main() {
 	enableRawMode();
 	// Read 1 byte from the standard input into 'c' until no bytes left to read or q key is entered
 	while (1){
-		// Variable to get the input
-		char c = '\0';
-		if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN)
-			die("read");
-		if(iscntrl(c)){
-			printf("%d\r\n", c);
-		} else {
-			printf("%d ('%c')\r\n", c, c);
-		}
-		if (c == CTRL_KEY('q')) break;
+		editorProcessKeypress();
 	}
 	return 0;
 }
