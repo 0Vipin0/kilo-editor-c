@@ -76,6 +76,8 @@ void editorRefreshScreen(){
 	// \x1b -> Escape Character (27), \x1b[ -> Escape Sequence, J -> Clear Screen, 2 -> Clear Entire Screen
 	// write -> write 4 bytes to screen
 	write(STDOUT_FILENO, "\x1b[2J", 4);
+	// Escape Sequence -> Reposition Cursor (Default Position - 1,1)
+	write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
 /*** input ***/
