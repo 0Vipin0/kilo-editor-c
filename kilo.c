@@ -70,6 +70,14 @@ char editorReadKey(){
 	return c;
 }
 
+/*** output ***/
+
+void editorRefreshScreen(){
+	// \x1b -> Escape Character (27), \x1b[ -> Escape Sequence, J -> Clear Screen, 2 -> Clear Entire Screen
+	// write -> write 4 bytes to screen
+	write(STDOUT_FILENO, "\x1b[2J", 4);
+}
+
 /*** input ***/
 
 void editorProcessKeypress(){
@@ -90,6 +98,7 @@ int main() {
 	enableRawMode();
 	// Read 1 byte from the standard input into 'c' until no bytes left to read or q key is entered
 	while (1){
+		editorRefreshScreen();
 		editorProcessKeypress();
 	}
 	return 0;
