@@ -76,11 +76,21 @@ char editorReadKey(){
 
 /*** output ***/
 
+void editorDrawRows(){
+	for(int i = 0; i < 24 ; i++){
+		write(STDOUT_FILENO, "~\r\n", 3);
+	}
+}
+
 void editorRefreshScreen(){
 	// \x1b -> Escape Character (27), \x1b[ -> Escape Sequence, J -> Clear Screen, 2 -> Clear Entire Screen
 	// write -> write 4 bytes to screen
 	write(STDOUT_FILENO, "\x1b[2J", 4);
 	// Escape Sequence -> Reposition Cursor (Default Position - 1,1)
+	write(STDOUT_FILENO, "\x1b[H", 3);
+
+	editorDrawRows();
+
 	write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
