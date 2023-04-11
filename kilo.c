@@ -82,7 +82,7 @@ char editorReadKey(){
 	return c;
 }
 
-int getCursorPostion(int *rows, int *cols){
+int getCursorPosition(int *rows, int *cols){
 	char buf[32];
 	unsigned int i = 0;
 
@@ -106,10 +106,10 @@ int getWindowSize(int *rows, int *cols){
 	// From sys/ioctl
 	struct winsize ws;
 	// TIOCGWINSZ -> Terminal IOCtl (which itself stands for Input/Output Control) Get WINdow SiZe)
-	if (1 || ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
+	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
 		// C -> moves cursor to right, B -> moves cursor to down
 		if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1;
-		return getCursorPostion(rows, cols);
+		return getCursorPosition(rows, cols);
 	} else {
 		*cols = ws.ws_col;
 		*rows = ws.ws_row;
