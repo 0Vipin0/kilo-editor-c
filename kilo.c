@@ -9,6 +9,7 @@
 #include <sys/ioctl.h>
 
 /*** defines ***/
+
 // Sets the upper 3 bits of character to 0 like Ctrl key does
 #define CTRL_KEY(k) ((k) & 0x1f) 
 
@@ -85,7 +86,10 @@ int getWindowSize(int *rows, int *cols){
 	// From sys/ioctl
 	struct winsize ws;
 	// TIOCGWINSZ -> Terminal IOCtl (which itself stands for Input/Output Control) Get WINdow SiZe)
-	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
+	if (1 || ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
+		// C -> moves cursor to right, B -> moves cursor to down
+		if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1;
+		editorReadKey();
 		return -1;
 	} else {
 		*cols = ws.ws_col;
