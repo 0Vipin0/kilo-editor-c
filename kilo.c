@@ -15,6 +15,8 @@
 /*** data ***/
 
 struct editorConfig {
+	int screenrows;
+	int screencols;
 	struct termios orig_termios;
 };
 
@@ -130,9 +132,14 @@ void editorProcessKeypress(){
 
 /*** init ***/
 
+void initEditor(){
+	if (getWindowSize(&E.screenrows, &E.screencols) == -1 ) die ("getWindowSize");
+}
+
 int main() {
 	// Turn the terminal to Raw mode from Canonical Mode
 	enableRawMode();
+	initEditor();
 	// Read 1 byte from the standard input into 'c' until no bytes left to read or q key is entered
 	while (1){
 		editorRefreshScreen();
