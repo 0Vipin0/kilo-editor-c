@@ -6,6 +6,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/ioctl.h>
 
 /*** defines ***/
 // Sets the upper 3 bits of character to 0 like Ctrl key does
@@ -76,6 +77,19 @@ char editorReadKey(){
 		if(nread == -1 && errno != EAGAIN) die("read");
 	}
 	return c;
+}
+
+int getWindowSize(int *rows, int *cols){
+	// From sys/ioctl
+	struct winsize ws;
+	// TIOCGWINSZ -> Terminal IOCtl (which itself stands for Input/Output Control) Get WINdow SiZe)
+	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
+		return -1;
+	} else {
+		*cols = ws.ws_col;
+		*rows = ws.ws_row;
+		return 0;
+	}
 }
 
 /*** output ***/
