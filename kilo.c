@@ -13,7 +13,11 @@
 
 /*** data ***/
 
-struct termios orig_termios;
+struct editorConfig {
+	struct termios orig_termios;
+};
+
+struct editorConfig E;
 
 void die(const char *s){
 	// Clear screen on exit
@@ -27,7 +31,7 @@ void die(const char *s){
 /*** terminal ***/
 
 void disableRawMode(){
-	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1)
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1)
 		die("tcsetattr");
 }
 
@@ -38,12 +42,12 @@ void enableRawMode(){
 	// STDIN_FILENO -> 0
 	// STDOUT_FILENO -> 1
 	// STDERR_FILENO -> 2
-	if (tcgetattr(STDIN_FILENO, &orig_termios) == -1)
+	if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1)
 		die("tcgetattr");
 	// Disable is automatically called when program exits either from main() or exit() to reset the terminal in original state
 	atexit(disableRawMode);
 
-	struct termios raw = orig_termios;
+	struct termios raw = E.orig_termios;
 	// Turn off all output processing (OPOST)
 	raw.c_oflag &= ~(OPOST);
 	// Turn off Ctrl+S and Ctrl+Q Signals (IXON), Ctrl+M (ICRNL), Misc. flags(BRKINT - cause a SIGINT signal to program, INPCK - Enable Parity Checking, so not relevant to modern terminals, ISTRIP - 8th bit of each input set to 0)
