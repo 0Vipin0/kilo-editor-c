@@ -156,6 +156,8 @@ void editorDrawRows(struct abuf *ab){
 void editorRefreshScreen(){
 	struct abuf ab = ABUF_INIT;
 	// \x1b -> Escape Character (27), \x1b[ -> Escape Sequence, J -> Clear Screen, 2 -> Clear Entire Screen
+	// l Command -> Reset Mode
+	abAppend(&ab, "\x1b[?25l", 6);
 	// write -> write 4 bytes to screen
 	abAppend(&ab, "\x1b[2J", 4);
 	// Escape Sequence -> Reposition Cursor (Default Position - 1,1)
@@ -164,6 +166,9 @@ void editorRefreshScreen(){
 	editorDrawRows(&ab);
 
 	abAppend(&ab, "\x1b[H", 3);
+
+	// h Command -> Set Mode
+	abAppend(&ab, "\x1b[?25h", 6);
 
 	write(STDOUT_FILENO, ab.b, ab.len);
 
