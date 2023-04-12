@@ -142,27 +142,32 @@ void abFree(struct abuf *ab){
 
 /*** output ***/
 
-void editorDrawRows(){
+void editorDrawRows(struct abuf *ab){
 	int i = 0;
 	for( i = 0; i < E.screenrows ; i++){
-		write(STDOUT_FILENO, "~", 1);
+		abAppend(ab, "~", 1);
 		// If this is not the last row, then return carriage and print new lien -> To make sure the last line have tilde
 		if(i < E.screenrows - 1){
-			write(STDOUT_FILENO, "\r\n", 2);
+			abAppend(ab, "\r\n", 2);
 		}
 	}
 }
 
 void editorRefreshScreen(){
+	struct abuf ab = ABUF_INIT;
 	// \x1b -> Escape Character (27), \x1b[ -> Escape Sequence, J -> Clear Screen, 2 -> Clear Entire Screen
 	// write -> write 4 bytes to screen
-	write(STDOUT_FILENO, "\x1b[2J", 4);
+	abAppend(&ab, "\x1b[2J", 4);
 	// Escape Sequence -> Reposition Cursor (Default Position - 1,1)
-	write(STDOUT_FILENO, "\x1b[H", 3);
+	abAppend(&ab, "\x1b[H", 3);
 
-	editorDrawRows();
+	editorDrawRows(&ab);
 
-	write(STDOUT_FILENO, "\x1b[H", 3);
+	abAppend(&ab, "\x1b[H", 3);
+
+	write(STDOUT_FILENO, ab.b, ab.len);
+
+	abFree(&ab);
 }
 
 /*** input ***/
