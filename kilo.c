@@ -120,8 +120,13 @@ int getWindowSize(int *rows, int *cols){
 /*** output ***/
 
 void editorDrawRows(){
-	for(int i = 0; i < E.screenrows ; i++){
-		write(STDOUT_FILENO, "~\r\n", 3);
+	int i = 0;
+	for( i = 0; i < E.screenrows ; i++){
+		write(STDOUT_FILENO, "~", 1);
+		// If this is not the last row, then return carriage and print new lien -> To make sure the last line have tilde
+		if(i < E.screenrows - 1){
+			write(STDOUT_FILENO, "\r\n", 2);
+		}
 	}
 }
 
