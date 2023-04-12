@@ -146,6 +146,9 @@ void editorDrawRows(struct abuf *ab){
 	int i = 0;
 	for( i = 0; i < E.screenrows ; i++){
 		abAppend(ab, "~", 1);
+		// Erases part of line to the right of current position
+		abAppend(ab, "\x1b[K", 3);
+
 		// If this is not the last row, then return carriage and print new lien -> To make sure the last line have tilde
 		if(i < E.screenrows - 1){
 			abAppend(ab, "\r\n", 2);
@@ -158,8 +161,6 @@ void editorRefreshScreen(){
 	// \x1b -> Escape Character (27), \x1b[ -> Escape Sequence, J -> Clear Screen, 2 -> Clear Entire Screen
 	// l Command -> Reset Mode
 	abAppend(&ab, "\x1b[?25l", 6);
-	// write -> write 4 bytes to screen
-	abAppend(&ab, "\x1b[2J", 4);
 	// Escape Sequence -> Reposition Cursor (Default Position - 1,1)
 	abAppend(&ab, "\x1b[H", 3);
 
