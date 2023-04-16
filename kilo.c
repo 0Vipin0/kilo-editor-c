@@ -1,6 +1,8 @@
 /*** includes ***/
 // To manage warning 'implicit declaration of function ‘getline’' below define is used 
-#define _XOPEN_SOURCE 700
+#define _DEFAULT_SOURCE
+#define _BSD_SOURCE
+#define _GNU_SOURCE
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
