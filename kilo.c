@@ -238,7 +238,7 @@ void editorDrawRows(struct abuf *ab){
 	int i = 0;
 	for( i = 0; i < E.screenrows ; i++){
 		if (i >= E.numrows){
-			if (i == E.screenrows /3){
+			if (E.numrows == 0 && i == E.screenrows /3){
 				char welcome[80];
 				int welcomelen = snprintf(welcome,sizeof(welcome),"Kilo Editor -- version %s", KILO_VERSION);
 				if (welcomelen > E.screencols) welcomelen = E.screencols;
