@@ -137,7 +137,9 @@ void abAppend(struct abuf *ab, const char *s, int len){
 }
 
 void abFree(struct abuf *ab){
-	free(ab);
+	ab->b = NULL;
+	ab->len = 0;
+	//free(ab);
 }
 
 /*** output ***/
