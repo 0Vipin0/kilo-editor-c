@@ -222,20 +222,27 @@ void abFree(struct abuf *ab){
 void editorDrawRows(struct abuf *ab){
 	int i = 0;
 	for( i = 0; i < E.screenrows ; i++){
-		if (i == E.screenrows /3){
-			char welcome[80];
-			int welcomelen = snprintf(welcome,sizeof(welcome),"Kilo Editor -- version %s", KILO_VERSION);
-			if (welcomelen > E.screencols) welcomelen = E.screencols;
-			int padding = (E.screencols - welcomelen) / 2;
-			if (padding){
-				abAppend(ab, "~",1);
-				padding --;
+		if (i >= E.numrows){
+			if (i == E.screenrows /3){
+				char welcome[80];
+				int welcomelen = snprintf(welcome,sizeof(welcome),"Kilo Editor -- version %s", KILO_VERSION);
+				if (welcomelen > E.screencols) welcomelen = E.screencols;
+				int padding = (E.screencols - welcomelen) / 2;
+				if (padding){
+					abAppend(ab, "~",1);
+					padding --;
+				}
+				while (padding--) abAppend(ab, " ", 1);
+				abAppend(ab, welcome, welcomelen);
+			} else {
+				abAppend(ab, "~", 1);
 			}
-			while (padding--) abAppend(ab, " ", 1);
-			abAppend(ab, welcome, welcomelen);
 		} else {
-			abAppend(ab, "~", 1);
+			int len = E.row.size;
+			if (len > E.screencols) len = E.screencols;
+			abAppend(ab, E.row.chars, len);
 		}
+		
 		// Erases part of line to the right of current position
 		abAppend(ab, "\x1b[K", 3);
 
