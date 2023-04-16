@@ -11,6 +11,8 @@
 
 /*** defines ***/
 
+#define KILO_VERSION "0.0.1"
+
 // Sets the upper 3 bits of character to 0 like Ctrl key does
 #define CTRL_KEY(k) ((k) & 0x1f) 
 
@@ -147,7 +149,14 @@ void abFree(struct abuf *ab){
 void editorDrawRows(struct abuf *ab){
 	int i = 0;
 	for( i = 0; i < E.screenrows ; i++){
-		abAppend(ab, "~", 1);
+		if (i == E.screenrows /3){
+			char welcome[80];
+			int welcomelen = sprintf(welcome,"Kilo Editor -- version %s", KILO_VERSION);
+			if (welcomelen > E.screencols) welcomelen = E.screencols;
+			abAppend(ab, welcome, welcomelen);
+		} else {
+			abAppend(ab, "~", 1);
+		}
 		// Erases part of line to the right of current position
 		abAppend(ab, "\x1b[K", 3);
 
