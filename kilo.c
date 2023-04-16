@@ -152,7 +152,7 @@ void editorDrawRows(struct abuf *ab){
 	for( i = 0; i < E.screenrows ; i++){
 		if (i == E.screenrows /3){
 			char welcome[80];
-			int welcomelen = sprintf(welcome,"Kilo Editor -- version %s", KILO_VERSION);
+			int welcomelen = snprintf(welcome,sizeof(welcome),"Kilo Editor -- version %s", KILO_VERSION);
 			if (welcomelen > E.screencols) welcomelen = E.screencols;
 			int padding = (E.screencols - welcomelen) / 2;
 			if (padding){
@@ -183,6 +183,10 @@ void editorRefreshScreen(){
 	abAppend(&ab, "\x1b[H", 3);
 
 	editorDrawRows(&ab);
+
+	char buf[32];
+	snprintf(buf,sizeof(buf), "x1b[%d;%dH", E.cy+1, E.cx+1);
+	abAppend(&ab, buf, strlen(buf));
 
 	abAppend(&ab, "\x1b[H", 3);
 
