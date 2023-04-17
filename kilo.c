@@ -243,6 +243,15 @@ void abFree(struct abuf *ab){
 
 /*** output ***/
 
+void editorScroll(){
+	if(E.cy < E.rowoff){
+		E.rowoff = E.cy;
+	}
+	if(E.cy >= E.rowoff + E.screenrows){
+		E.rowoff = E.cy - E.screenrows + 1;
+	}
+}
+
 void editorDrawRows(struct abuf *ab){
 	int i = 0;
 	for( i = 0; i < E.screenrows ; i++){
@@ -279,6 +288,8 @@ void editorDrawRows(struct abuf *ab){
 }
 
 void editorRefreshScreen(){
+	editorScroll();
+
 	struct abuf ab = ABUF_INIT;
 	// \x1b -> Escape Character (27), \x1b[ -> Escape Sequence, J -> Clear Screen, 2 -> Clear Entire Screen
 	// l Command -> Reset Mode
