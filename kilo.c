@@ -298,10 +298,10 @@ void editorDrawRows(struct abuf *ab){
 				abAppend(ab, "~", 1);
 			}
 		} else {
-			int len = E.row[fileRow].size - E.coloff;
+			int len = E.row[fileRow].rsize - E.coloff;
 			if (len < 0) len = 0;
 			if (len > E.screencols) len = E.screencols;
-			abAppend(ab, &E.row[fileRow].chars[E.coloff], len);
+			abAppend(ab, &E.row[fileRow].render[E.coloff], len);
 		}
 		
 		// Erases part of line to the right of current position
