@@ -246,7 +246,8 @@ void abFree(struct abuf *ab){
 void editorDrawRows(struct abuf *ab){
 	int i = 0;
 	for( i = 0; i < E.screenrows ; i++){
-		if (i >= E.numrows){
+		int fileRow = i + E.rowoff;
+		if (fileRow >= E.numrows){
 			if (E.numrows == 0 && i == E.screenrows /3){
 				char welcome[80];
 				int welcomelen = snprintf(welcome,sizeof(welcome),"Kilo Editor -- version %s", KILO_VERSION);
@@ -262,9 +263,9 @@ void editorDrawRows(struct abuf *ab){
 				abAppend(ab, "~", 1);
 			}
 		} else {
-			int len = E.row[i].size;
+			int len = E.row[fileRow].size;
 			if (len > E.screencols) len = E.screencols;
-			abAppend(ab, E.row[i].chars, len);
+			abAppend(ab, E.row[fileRow].chars, len);
 		}
 		
 		// Erases part of line to the right of current position
